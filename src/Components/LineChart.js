@@ -15,6 +15,8 @@ const LineChart = () => {
   const [checked, setChecked] = useState(false);
   const [dates, setDates] = useState(null);
 
+  console.log('')
+
   const sortedChartData = useMemo(() => {
     return chartData
       .sort((a, b) => new Date(a.time) - new Date(b.time))
