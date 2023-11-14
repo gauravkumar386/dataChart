@@ -15,8 +15,6 @@ const LineChart = () => {
   const [checked, setChecked] = useState(false);
   const [dates, setDates] = useState(null);
 
-  console.log('')
-
   const sortedChartData = useMemo(() => {
     return chartData
       .sort((a, b) => new Date(a.time) - new Date(b.time))
@@ -73,6 +71,13 @@ const LineChart = () => {
     setDates(null);
   };
 
+  const endpoint = [...new Set(chartData.map((x) => x.endpoint))].map((x) => {
+    return {
+      name: x,
+      code: x,
+    };
+  });
+
   return (
     <div className="chart-container">
       <div className="flex flex-row p-3 justify-content-evenly bg-bluegray-100">
@@ -81,7 +86,7 @@ const LineChart = () => {
           <Dropdown
             value={activeEndpoint}
             onChange={(e) => setActiveEndpoint(e.value)}
-            options={endpoints}
+            options={endpoint}
             optionLabel="name"
             placeholder="Select an endpoint"
             className="w-full md:w-14rem"
@@ -118,60 +123,34 @@ const LineChart = () => {
         className="m-8"
         data={{
           labels: [...new Set(dateAndTimeLabels)],
-          datasets: [
-            {
-              label: "/home",
-              data: getChartData("/home"),
+          datasets: endpoint.map((data) => {
+            return {
+              label: data.code,
+              data: getChartData(data.code),
               fill: false,
               borderWidth: 1,
-              backgroundColor: "green",
-              borderColor: "green",
-              responsive: true,
-              spanGaps: true,
-              showLine:
-                activeEndpoint?.code === "" || activeEndpoint?.code === "/home",
-              pointRadius:
-                activeEndpoint?.code === "" || activeEndpoint?.code === "/home"
-                  ? 3
-                  : 0,
-            },
-            {
-              label: "/product",
-              data: getChartData("/product"),
-              fill: false,
-              borderWidth: 1,
-              backgroundColor: "#000",
-              borderColor: "#000",
               responsive: true,
               spanGaps: true,
               showLine:
                 activeEndpoint?.code === "" ||
-                activeEndpoint?.code === "/product",
+                activeEndpoint?.code === data.code,
               pointRadius:
                 activeEndpoint?.code === "" ||
-                activeEndpoint?.code === "/product"
+                activeEndpoint?.code === data.code
                   ? 3
                   : 0,
+            };
+          }),
+          options: {
+            scales: {
+              y: {
+                title: {
+                  display: true,
+                  text: "No. of Requests",
+                },
+              },
             },
-            {
-              label: "/contact",
-              data: getChartData("/contact"),
-              fill: false,
-              borderWidth: 1,
-              backgroundColor: "red",
-              borderColor: "red",
-              responsive: true,
-              spanGaps: true,
-              showLine:
-                activeEndpoint?.code === "" ||
-                activeEndpoint?.code === "/contact",
-              pointRadius:
-                activeEndpoint?.code === "" ||
-                activeEndpoint?.code === "/contact"
-                  ? 3
-                  : 0,
-            },
-          ],
+          },
         }}
       />
     </div>

@@ -33,6 +33,7 @@ export const chartData = [
     special: true,
   },
   { endpoint: "/contact", time: "2023-10-06T02:01:17.735Z", requests: 2800 },
+  { endpoint: "/new", time: '2023-10-07T07:01:17.735Z', requests: 2200 }
 ];
 
 export const endpoints = [
